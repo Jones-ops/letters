@@ -1,0 +1,133 @@
+.recipient-view-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipient-letter-wrapper {
+  width: 100%;
+  max-width: 700px;
+}
+
+.recipient-letter-content {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recipient-letter-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.recipient-back-btn {
+  display: block;
+  margin: 0 auto 20px;
+  background: #f0f0f0;
+  color: #667eea;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95em;
+}
+
+.recipient-back-btn:hover {
+  background: #e0e0e0;
+  transform: translateX(-4px);
+}
+
+.recipient-letter-header h1 {
+  color: #333;
+  font-size: 2.5em;
+  margin: 0 0 10px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.recipient-letter-date {
+  color: #999;
+  font-size: 1em;
+  margin: 0;
+  font-style: italic;
+}
+
+.recipient-letter-text {
+  color: #333;
+  line-height: 1.8;
+  font-size: 1.05em;
+  margin: 40px 0;
+  text-align: left;
+}
+
+.recipient-letter-text p {
+  margin-bottom: 1.2em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.recipient-letter-text p:last-child {
+  margin-bottom: 0;
+}
+
+.recipient-letter-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.message-to-recipient {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.recipient-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+@media (max-width: 768px) {
+  .recipient-letter-content {
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+
+  .recipient-letter-header h1 {
+    font-size: 1.8em;
+  }
+
+  .recipient-letter-text {
+    font-size: 1em;
+    line-height: 1.7;
+  }
+
+  .recipient-view-container {
+    padding: 20px 15px;
+  }
+}
