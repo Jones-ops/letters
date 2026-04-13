@@ -4,6 +4,7 @@ import Introduction from './components/Introduction'
 import WriterDashboard from './components/WriterDashboard'
 import RecipientView from './components/RecipientView'
 import FallingEmojis from './components/FallingEmojis'
+import { initializeDatabase, getLetters, addLetter, deleteLetter, getLetter } from './services/tursoService'
 
 function App() {
   const [letters, setLetters] = useState([])
@@ -11,28 +12,27 @@ function App() {
   const [route, setRoute] = useState('intro') // 'intro', 'writer', 'recipient'
   const [viewingLetterId, setViewingLetterId] = useState(null)
   const [letterNotFound, setLetterNotFound] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  // Load letters from localStorage on mount
+  // Initialize database and load letters on mount
   useEffect(() => {
-    const savedLetters = localStorage.getItem('letters')
-    if (savedLetters) {
+    const initializeApp = async () => {
       try {
-        setLetters(JSON.parse(savedLetters))
-      } catch (e) {
-        console.error('Failed to load letters:', e)
+        await initializeDatabase()
+        const loadedLetters = await getLetters()
+        setLetters(loadedLetters)
+      } catch (error) {
+        console.error('Error initializing app:', error)
+      } finally {
+        setLoading(false)
       }
+      
+      // Handle URL hash routing
+      handleRouting(window.location.hash)
     }
     
-    // Handle URL hash routing
-    handleRouting(window.location.hash)
+    initializeApp()
   }, [])
-
-  // Save letters to localStorage whenever they change
-  useEffect(() => {
-    if (letters.length > 0 || localStorage.getItem('letters')) {
-      localStorage.setItem('letters', JSON.stringify(letters))
-    }
-  }, [letters])
 
   // Listen for hash changes
   useEffect(() => {
@@ -68,7 +68,7 @@ function App() {
     setRoute('writer')
   }
 
-  const handleAddLetter = (newLetter) => {
+  const handleAddLetter = async (newLetter) => {
     const letter = {
       id: Date.now(),
       ...newLetter,
@@ -78,12 +78,20 @@ function App() {
         day: 'numeric'
       })
     }
-    setLetters([letter, ...letters])
+    
+    // Add to Turso
+    const success = await addLetter(letter)
+    if (success) {
+      setLetters([letter, ...letters])
+    }
   }
 
-  const handleDeleteLetter = (letterId) => {
-    setLetters(letters.filter(l => l.id !== letterId))
-    window.location.hash = '#/'
+  const handleDeleteLetter = async (letterId) => {
+    const success = await deleteLetter(letterId)
+    if (success) {
+      setLetters(letters.filter(l => l.id !== letterId))
+      window.location.hash = '#/'
+    }
   }
 
   const getLetterById = (id) => {
@@ -92,6 +100,14 @@ function App() {
 
   const getShareLink = (letterId) => {
     return `${window.location.origin}${window.location.pathname}#/view/${letterId}`
+  }
+
+  if (loading) {
+    return (
+      <div className="app" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: 'white', fontSize: '1.2em' }}>Loading...</div>
+      </div>
+    )
   }
 
   return (
